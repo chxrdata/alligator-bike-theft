@@ -6,9 +6,26 @@
   <title>Map Test</title>
   <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 <body>
+  <div id="header">
+    <div id="heatmapkey">
+      <div id="heatmaptitlebox">Theft density</div>
+      <div id="gradientbox"></div>
+      <div id="heatmapkeytext"><span>Low</span><span>High</span></div>
+    </div>
+    <div id="pointskey">
+      <div id="pointstitlebox">Individual Thefts</div>
+      <div id="orangedot"></div>
+      <div id="pointskeytext">Select dots to view theft information</div>
+    </div>
+  </div>
   <div id="map"></div>
   <script type="module" src="app.js"></script>
 </body>
 </html>
+
+<!-- todo: change key at zoomed in, fix dates -->

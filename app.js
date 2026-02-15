@@ -6,7 +6,7 @@ const map = new maplibregl.Map({
     center: [-82.35554357626472, 29.643690288317917],
     zoom: 14,
     maxzoom: 20,
-    minZoom: 13,
+    minZoom: 12,
 });
 
 map.on('load', async () => {
@@ -70,7 +70,7 @@ map.on('load', async () => {
                         ['zoom'],
                         13.5,
                         1,
-                        17,
+                        16,
                         0
                     ]
                 }
@@ -82,9 +82,9 @@ map.on('load', async () => {
                 'id': 'thefts-point',
                 'type': 'circle',
                 'source': 'places',
-                'minzoom': 7,
+                'minzoom': 15,
                 'paint': {
-                    'circle-radius': 8,
+                    'circle-radius': 5,
                     'circle-color': 'rgb(255, 170, 0)',
                     // Transition from heatmap to circle layer by zoom level
                     'circle-opacity': [
@@ -93,11 +93,64 @@ map.on('load', async () => {
                         ['zoom'],
                         15,
                         0,
-                        18,
+                        16,
                         1
                     ]
                 }
             }
         );
+
+    //initialize popup
+    const popup = new maplibregl.Popup({
+        closeButton: false,
+        closeOnClick: false
+    });
+
+  //popup on hover
+  let currentFeatureCoordinates = undefined;
+  map.on('mousemove', 'thefts-point', (e) => {
+      const featureCoordinates = e.features[0].geometry.coordinates.toString();
+      if (currentFeatureCoordinates !== featureCoordinates) {
+          currentFeatureCoordinates = featureCoordinates;
+          
+          map.getCanvas().style.cursor = 'pointer';
+
+          const coordinates = e.features[0].geometry.coordinates.slice();
+          const time = e.features[0].properties.time.slice(-11, -6) + e.features[0].properties.time.slice(-3);
+          const vehicle = e.features[0].properties.vehicle;
+          const date = e.features[0].properties.date
+
+          // Ensure that if the map is zoomed out such that multiple
+          // copies of the feature are visible, the popup appears
+          // over the copy being pointed to.
+          while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+              coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+          }
+
+          // Populate the popup
+          popup.setLngLat(coordinates).setHTML(vehicle + " stolen on " + date + " at " + time).addTo(map);
+      }
+    });
+
+    map.on('mouseleave', 'thefts-point', () => {
+    map.getCanvas().style.cursor = '';
+    popup.remove();
+    currentFeatureCoordinates = undefined;
+    });
+
+    const heatmapKey = document.getElementById('heatmapkey');
+    const pointsKey = document.getElementById('pointskey');
+    let currentZoom = undefined
+    //get zoom level
+    map.on('zoom', () => {
+        currentZoom = map.getZoom();
+        if (currentZoom > 15.5) {
+            pointsKey.style.visibility = "visible";
+            heatmapKey.style.visibility = "hidden";
+        } else {
+            pointsKey.style.visibility = "hidden";
+            heatmapKey.style.visibility = "visible";
+        }
+    });
 
 });
