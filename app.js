@@ -84,7 +84,7 @@ map.on('load', async () => {
                 'source': 'places',
                 'minzoom': 15,
                 'paint': {
-                    'circle-radius': 5,
+                    'circle-radius': 8,
                     'circle-color': 'rgb(255, 170, 0)',
                     // Transition from heatmap to circle layer by zoom level
                     'circle-opacity': [
@@ -138,10 +138,10 @@ map.on('load', async () => {
     currentFeatureCoordinates = undefined;
     });
 
+    //change key based on zoom level
     const heatmapKey = document.getElementById('heatmapkey');
     const pointsKey = document.getElementById('pointskey');
     let currentZoom = undefined
-    //get zoom level
     map.on('zoom', () => {
         currentZoom = map.getZoom();
         if (currentZoom > 15.5) {
