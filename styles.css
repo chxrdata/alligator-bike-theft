@@ -103,7 +103,7 @@ body {
   max-width: 80%;
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 575px) {
   #header {
     position: absolute;
     left: 2rem;
